@@ -1,0 +1,70 @@
+package com.dh.guangfu.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.dh.guangfu.po.Electricity;
+import com.dh.guangfu.service.ElectricityService;
+import com.dh.system.base.BaseController;
+import com.dh.utils.R;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+/**电表管理页
+ * @author Administrator
+ *
+ */
+@RestController
+@RequestMapping("/electricity")
+@Api(value = "发电户电表",description="发电户电表", tags = "发电户电表管理")
+public class ElectricityController extends BaseController{
+	@Autowired
+	private ElectricityService electricityService;
+		
+	
+	
+	
+	
+	@ApiOperation(value="根据id查找", notes="根据id查找")
+	@PostMapping(value="/findById")
+	public R findById(@RequestBody Electricity Electricity) {
+		try {
+			Electricity electricity = electricityService.findById(Electricity.getId());
+				
+			return	R.ok().put("electricity", electricity);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return	R.error();
+		} 
+	}
+	
+	@ApiOperation(value="根据address查找", notes="根据address查找")
+	@PostMapping(value="/findByAddress")
+	public R findByAddress(@RequestBody Electricity Electricity) {
+			Electricity electricity = electricityService.findByAddress(Electricity.getAddress());
+			return	R.ok().put("electricity", electricity);
+	}
+	
+	
+	
+	@ApiOperation(value="保存或者更新", notes="")
+	@PostMapping(value="/save")
+	public R save(@RequestBody Electricity Electricity) {
+		try {
+			if(null != Electricity.getId() && 0 != Electricity.getId()){
+				electricityService.update(Electricity);
+			}else{
+				electricityService.insert(Electricity);
+			}
+				
+			return	R.ok();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return	R.error();
+		} 
+	}
+	
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.UserBankMapper" >
+	<resultMap id="BaseResultMap" type="com.dh.guangfu.po.UserBank" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="true_name" property="true_name" jdbcType="VARCHAR" />
+		<result column="bank_num" property="bank_num" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="card_id" property="card_id" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" />
+	</resultMap>
+	
+  <sql id="Base_Column_List" >
+  	id,true_name,bank_num,address,card_id,user_id
+  </sql>
+  
+  <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_bank
+  </select>
+  
+   <select id="fingByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_bank
+    where user_id = #{user_id,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from user_bank
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.dh.guangfu.po.UserBank" >
+    insert into user_bank (id, true_name,bank_num,address,card_id,user_id)
+    values (#{id,jdbcType=BIGINT}, #{true_name},#{bank_num},#{address},#{card_id},#{user_id})
+  </insert>
+  
+  <update id="update" parameterType="com.dh.guangfu.po.UserBank" >
+    update user_bank
+    <set >
+      <if test="true_name != null" >
+        true_name = #{true_name,jdbcType=VARCHAR},
+      </if>
+      <if test="bank_num != null" >
+        bank_num = #{bank_num,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="card_id != null" >
+        card_id = #{card_id,jdbcType=VARCHAR},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>  	

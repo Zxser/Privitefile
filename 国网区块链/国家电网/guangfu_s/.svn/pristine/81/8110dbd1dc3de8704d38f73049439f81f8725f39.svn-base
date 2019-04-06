@@ -1,0 +1,26 @@
+package com.dh.backview.service;
+
+import com.dh.backview.po.SysUser;
+import com.dh.system.base.BaseDao;
+import com.dh.system.vo.SysUserQuery;
+import com.dh.utils.PageInfo;
+
+public interface SysUserService extends BaseDao{
+	SysUserQuery getSysUserById(Long id);
+
+	SysUser getUserByName(String username);
+
+	void save(SysUser sysUser);
+
+	void update(SysUser sysUser) throws Exception;
+
+	void fingAll(PageInfo pageInfo,SysUserQuery sysUser);
+
+	void delete(Long[] arrayid);
+
+	SysUser getUserByPhone(String phone);
+
+	void saveRegister(SysUser user) throws Exception;
+
+	SysUser getById(Long id);
+}

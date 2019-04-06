@@ -1,0 +1,13 @@
+# \u56fe\u7247\u5b58\u653e\u4f4d\u7f6e
+config.filePath=d:\\upload\\
+#\u4e0a\u6d77\u603b\u8282\u70b9
+config.serviceUrl=http://192.168.1.185:55556
+config.username=scnode1
+config.password=123456
+#\u4e0a\u6d77\u603b\u5730\u5740
+config.gfbTotalAddr=1JLfNiyBLVHb7sFvbpBVa8ZnD8yJVJSnnR
+
+#\u5e01\u79cd
+config.symbol=GFB
+#\u627e\u96f6\u5730\u5740
+config.cosefee=1BMG55YhdSyvjcY9xArsiGXNJSbvqumSoP

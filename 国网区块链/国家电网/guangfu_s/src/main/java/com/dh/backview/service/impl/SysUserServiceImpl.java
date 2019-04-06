@@ -1,0 +1,102 @@
+package com.dh.backview.service.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.druid.util.StringUtils;
+import com.dh.backview.po.SysUser;
+import com.dh.backview.service.SysUserService;
+import com.dh.guangfu.service.SysUserKeyService;
+import com.dh.system.base.BaseDaoImpl;
+import com.dh.system.po.SysUserKey;
+import com.dh.system.service.SysUserRoleService;
+import com.dh.system.vo.SysUserQuery;
+import com.dh.utils.MD5Util;
+import com.dh.utils.PageInfo;
+import com.github.pagehelper.PageHelper;
+
+@Service
+public class SysUserServiceImpl extends BaseDaoImpl<SysUser>  implements SysUserService{
+	@Autowired
+	private SysUserRoleService sysUserRoleService;
+	
+	@Autowired
+	private SysUserKeyService ssUserKeyService;
+	
+	@Override
+	public SysUserQuery getSysUserById(Long id) {
+		SysUserQuery sysUserQuery =this.findOne("findByUserInfoId", id, SysUserQuery.class);
+		return sysUserQuery;
+	}
+
+	@Override
+	public SysUser getById(Long id) {
+		SysUser sysUserQuery =this.findOne("findById", id, SysUser.class);
+		return sysUserQuery;
+	}
+	
+	@Override
+	public SysUser getUserByName(String username) {
+		SysUser  user=this.findOne("findUserByName", username, SysUser.class);
+		return user;
+	}
+	
+	@Transactional
+	public void save(SysUser sysUser) {
+		super.save("insert",sysUser);
+	}
+	@Transactional
+	public void update(SysUser sysUser) throws Exception {
+		super.update("update", sysUser);
+	}
+
+	@Override
+	public void fingAll(PageInfo pageInfo,SysUserQuery sysUser) {
+		PageHelper.startPage(pageInfo.getPageNum(), pageInfo.getPageSize()).setOrderBy("id desc");
+		List<SysUserQuery> findList = this.findList("selectAll", sysUser,SysUserQuery.class);
+		Integer i =this.findOne("count", sysUser,Integer.class);
+		pageInfo.setList(findList);
+		pageInfo.setPage(i, pageInfo.getPageSize());
+	}
+	
+	@Transactional
+	public void delete(Long[] arrayid) {
+		for (Long id : arrayid) {
+			SysUser sysUser = this.findOne("findById",id, SysUser.class);
+			sysUserRoleService.deleteByUserId(sysUser.getId());//中间表删除
+		}
+		 super.delete("deleteById",arrayid);
+	}
+
+	@Override
+	public SysUser getUserByPhone(String phone) {
+		SysUser  user=this.findOne("getUserByPhone", phone, SysUser.class);
+		return user;
+	}
+	@Transactional
+	@Override
+	public void saveRegister(SysUser user) throws Exception {
+		/*
+		 * 生成公钥和私钥
+		 */
+		user.setPassword(MD5Util.getPassword(user.getPassword()));
+		user.setStatus("0");
+		user.setCreateTime(new Date());
+		this.save(user);
+		SysUserKey userKey=new SysUserKey();
+		userKey.setUser_id(user.getId());
+		userKey.setPrivatekey("私喽");
+		userKey.setPublickey("公钥");
+		ssUserKeyService.save(userKey);
+	}
+
+	@Override
+	public Integer findUserIdByMeterAddress(String address) {
+		Integer userId = this.findOne("findUserIdByMeterAddress", address, Integer.class);
+		return userId;
+	}
+}

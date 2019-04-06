@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.system.po.SysRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.dh.system.po.SysRole" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="modules" property="modules" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, modules, name
+  </sql>
+  
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    <where>
+		<if test="id!=null"> id=#{id} </if>
+		<if test="name!=null"> and name like CONCAT("%",#{name},"%") </if>
+    </where>
+  </select>
+  <!-- 得到记录总数 -->  
+    <select id="count" resultType="java.lang.Integer" parameterType="com.dh.system.po.SysRole">  
+       <![CDATA[ 
+          select count(*) from sys_role 
+       ]]>  
+        <where>
+    		<if test="name!=null"> name like CONCAT("%",#{name},"%") </if>
+    		<if test="name!=null"> and name like CONCAT("%",#{name},"%") </if>
+    	</where>
+    </select>
+  
+    <delete id="deleteById" parameterType="java.lang.Long" >
+	    delete from sys_role
+	    where id in 
+	    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+			 #{item}  
+		</foreach>  
+	  </delete>
+	  
+  <insert id="insert" parameterType="com.dh.system.po.SysRole" useGeneratedKeys="true" keyProperty="id">
+    insert into sys_role (id, modules, name
+      )
+    values (#{id,jdbcType=BIGINT}, #{modules,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <update id="update" parameterType="com.dh.system.po.SysRole" >
+    update sys_role
+    <set >
+      <if test="modules != null" >
+        modules = #{modules,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.dh.system.po.SysRole" >
+    update sys_role
+    set modules = #{modules,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

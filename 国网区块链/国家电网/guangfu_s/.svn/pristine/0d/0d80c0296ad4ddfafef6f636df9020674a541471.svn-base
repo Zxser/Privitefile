@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.system.po.SysUserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.dh.system.po.SysUserRole" >
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    role_id, user_id
+  </sql>
+  
+  <select id="findBySysUserRole" resultMap="BaseResultMap" parameterType="com.dh.system.po.SysUserRole" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user_role
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  
+   <insert id ="insertCodeBatch" parameterType="java.util.List" >
+       insert into sys_user_role
+       (role_id, user_id)
+       values
+        <foreach collection ="list" item="sysUserRole" index= "index" separator =",">
+            (  
+          	  #{sysUserRole.roleId}, #{sysUserRole.userId}
+            )
+        </foreach >
+ 	</insert >
+  
+  <delete id="deleteByUserId" parameterType="long">
+  	delete from sys_user_role where user_id =#{userId}  
+  </delete>
+  
+  <delete id="deleteByRoleId" parameterType="Long" >
+	    delete from sys_user_role
+	    where role_id in 
+	    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+			 #{item}  
+		</foreach>  
+ </delete>
+</mapper>

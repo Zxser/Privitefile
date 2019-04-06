@@ -1,0 +1,53 @@
+package com.dh.guangfu.po;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Map;
+/**
+ * 价格表
+ * @author liliangliang
+ *
+ */
+public class Electricity implements Serializable{
+	private static final long serialVersionUID = 1L;
+	private Long id;
+	private String address;//地址，后续更改为userId
+	private Long electricity;//电量
+	private Date buyTime;//购买时间
+	private Long state;//状态：1未结算。2已结算
+	public Electricity() {  
+      
+    }
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public Long getElectricity() {
+		return electricity;
+	}
+	public void setElectricity(Long electricity) {
+		this.electricity = electricity;
+	}
+	public Date getBuyTime() {
+		return buyTime;
+	}
+	public void setBuyTime(Date buyTime) {
+		this.buyTime = buyTime;
+	}
+	public Long getState() {
+		return state;
+	}
+	public void setState(Long state) {
+		this.state = state;
+	}
+	
+	
+}

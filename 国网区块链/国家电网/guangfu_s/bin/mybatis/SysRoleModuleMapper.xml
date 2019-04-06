@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.system.po.SysRoleModuleMapper" >
+  <resultMap id="BaseResultMap" type="com.dh.system.po.SysRoleModule" >
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="module_id" property="moduleId" jdbcType="BIGINT" />
+    <result column="pid" property="pid" jdbcType="BIGINT" />
+    <result column="sort" property="sort" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <resultMap id="ResultModule" type="com.dh.system.po.SysModule" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="sn" property="sn" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    role_id, module_id
+  </sql>
+  
+  <select id="findbyRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role_module
+    where role_id = #{role_id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getbyPId" resultMap="ResultModule" parameterType="com.dh.system.po.SysRoleModule" >
+    select *  from  sys_module where id in (SELECT module_id  from sys_role_module where pid=#{moduleId} and role_id=#{roleId})
+  </select>
+ 
+  <insert id="insert" parameterType="com.dh.system.po.SysRoleModule" >
+    insert into sys_role_module (role_id, module_id
+      )
+    values (#{roleId,jdbcType=BIGINT}, #{moduleId,jdbcType=BIGINT}
+      )
+  </insert>
+  
+  <insert id ="insertCodeBatch" parameterType="java.util.List" >
+       insert into sys_role_module
+       (role_id, module_id,pid,sort)
+       values
+        <foreach collection ="list" item="sysRoleModule" index= "index" separator =",">
+            (  
+          	  #{sysRoleModule.roleId}, #{sysRoleModule.moduleId},#{sysRoleModule.pid},#{sysRoleModule.sort}
+            )
+        </foreach >
+ 	</insert >
+  
+  <delete id="deleteNotRole" parameterType="Long">
+  	 DELETE from sys_role_module WHERE role_id=#{roleId}
+  </delete>
+  
+   <delete id="deleteByRoleId" parameterType="Long" >
+	    delete from sys_role_module
+	    where role_id in 
+	    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+			 #{item}  
+		</foreach>  
+ </delete>
+</mapper>

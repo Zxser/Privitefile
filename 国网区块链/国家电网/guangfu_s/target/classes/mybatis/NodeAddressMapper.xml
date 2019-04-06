@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.NodeAddressMapper" >
+	<resultMap id="BaseResultMap" type="com.dh.guangfu.po.NodeAddress" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="area_id" property="area_id"  />
+		<result column="super_address" property="super_address" jdbcType="VARCHAR" />
+		<result column="transaction_url" property="transaction_url" />
+		<result column="rpc_name" property="rpc_name"  />
+		<result column="rpc_password" property="rpc_password"  />
+		<result column="txid" property="txid"  />
+		<result column="note_port" property="note_port"  />
+		<result column="super_port" property="super_port"  />
+		<result column="area_address" property="area_address"  />
+		<result column="manage" property="manage"  />
+	</resultMap>
+	
+  <sql id="Base_Column_List" >
+  	id,area_id,super_address,transaction_url,rpc_name,rpc_password,txid,note_port,super_port,area_address,manage
+  </sql>
+  
+  <select id="findAll" resultMap="BaseResultMap" parameterType="com.dh.guangfu.vo.NodeAddressQuery" >
+    select 
+    <include refid="Base_Column_List" />
+    from node_address
+    <where>
+	    	<if test="super_address!=null and super_address.trim()!=''"> and super_address like CONCAT("%",#{super_address},"%") </if>
+    </where>
+  </select>
+  
+  <select id="findByAreaId" resultMap="BaseResultMap" parameterType="Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from node_address where area_id=#{area_id}
+  </select>
+  
+  <!-- 得到记录总数 -->  
+    <select id="count" resultType="java.lang.Integer" parameterType="com.dh.guangfu.vo.NodeAddressQuery">  
+       <![CDATA[ 
+          select count(*) from node_address 
+       ]]>  
+       <where>
+	    	<if test="super_address!=null and super_address.trim()!=''"> and super_address like CONCAT("%",#{super_address},"%") </if>
+    	</where>
+    </select>
+    
+    
+   <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from node_address
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from node_address
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.dh.guangfu.po.NodeAddress" >
+    insert into node_address (id,area_id,super_address,transaction_url,rpc_name,rpc_password,txid,super_port,area_address,manage)
+    values (#{id,jdbcType=BIGINT}, #{area_id},#{super_address},#{transaction_url},#{rpc_name},#{rpc_password},#{txid},#{super_port},#{area_address},#{manage})
+  </insert>
+  
+  <update id="update" parameterType="com.dh.guangfu.po.NodeAddress" >
+    update node_address
+    <set >
+      <if test="super_address != null" >
+        super_address = #{super_address,jdbcType=VARCHAR},
+      </if>
+      <if test="area_id != null" >
+        area_id = #{area_id},
+      </if>
+      <if test="rpc_name != null" >
+        rpc_name = #{rpc_name},
+      </if>
+      <if test="transaction_url != null" >
+        transaction_url = #{transaction_url},
+      </if>
+      <if test="rpc_name != null" >
+        rpc_name = #{rpc_name},
+      </if>
+      <if test="rpc_password != null" >
+        rpc_password = #{rpc_password},
+      </if>
+      <if test="txid != null" >
+        txid = #{txid},
+      </if>
+      <if test="super_port != null" >
+        super_port = #{super_port},
+      </if>
+      <if test="area_address != null" >
+        area_address = #{area_address},
+      </if>
+      <if test="manage != null" >
+        manage = #{manage},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>  	

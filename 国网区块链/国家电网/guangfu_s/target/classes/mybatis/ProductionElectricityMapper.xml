@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.ProductionElectricityMapper" >
+	<resultMap id="BaseResultMap" type="com.dh.guangfu.po.ProductionElectricity" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="num" property="num" />
+		<result column="create_date" property="create_date" />
+		<result column="user_id" property="user_id" />
+		<result column="year" property="year" />
+		<result column="month" property="month" />
+		<result column="day" property="day" />
+	</resultMap>
+	
+  <sql id="Base_Column_List" >
+  	id,num,create_date,user_id,year,month,day
+  </sql>
+  
+  <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from production_electricity
+  </select>
+  
+  <select id="fingByUserReport" resultMap="BaseResultMap" parameterType="com.dh.guangfu.vo.TrafficElectricityQuery" >
+   		 select * from `production_electricity` where
+   		 <![CDATA[  user_id=#{user_id} and create_date>=#{startDate} and create_date<=#{endDate} ]]>
+   		  order by id desc
+  </select>
+  
+   <select id="fingByTrafficElectricityQuery" resultMap="BaseResultMap" parameterType="com.dh.guangfu.vo.TrafficElectricityQuery" >
+    select 
+    <include refid="Base_Column_List" />
+    from production_electricity where user_id = #{user_id,jdbcType=BIGINT} 
+    	<if test="year!=null and year.trim()!=''">
+    		and year =#{year}
+    	</if>
+    	<if test="month!=null and month.trim()!=''">
+    		and month =#{month}
+    	</if>
+    	<if test="startDate!=null">
+    		and <![CDATA[ create_date>=#{startDate} and create_date<=#{endDate} ]]>
+    	</if>
+    	order by id desc
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from production_electricity
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.dh.guangfu.po.ProductionElectricity" >
+    insert into production_electricity (id, user_id,num,create_date,year,month,day)
+    values (#{id,jdbcType=BIGINT},#{user_id},#{num},#{create_date},#{year},#{month},#{day})
+  </insert>
+</mapper>  	

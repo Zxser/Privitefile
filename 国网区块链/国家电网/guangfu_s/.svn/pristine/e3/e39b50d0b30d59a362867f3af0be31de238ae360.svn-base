@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.ElectricityMapper" >
+	<resultMap id="BaseResultMap" type="com.dh.guangfu.po.Electricity" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="buyUserId" property="buyUserId" jdbcType="BIGINT" />
+		<result column="sellUserId" property="sellUserId" jdbcType="BIGINT" />
+		<result column="electricity" property="electricity" />
+		<result column="buyTime" property="buyTime" />
+		<result column="state" property="state"  />
+	</resultMap>
+	
+  <sql id="Base_Column_List" >
+  	id,buyUserId,electricity,sellUserId,buyTime,state
+  </sql>
+  
+    
+    
+   <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from electricity
+    where id = #{id,jdbcType=BIGINT}
+    and state = '1'
+  </select>
+  
+  <select id="findByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from electricity
+    where 
+    (buyUserId = #{userId} and state='1') 
+    or 
+    (sellUserId = #{userId} and state = '2')
+  </select>
+  
+  
+  
+  <insert id="insert" parameterType="com.dh.guangfu.po.Electricity" >
+    insert into electricity (id,buyUserId,sellUserId,electricity,buyTime,state)
+    values (#{id,jdbcType=BIGINT},#{buyUserId},#{sellUserId},#{electricity},#{buyTime},#{state})
+  </insert>
+  
+  <update id="update" parameterType="com.dh.guangfu.po.Electricity" >
+    update electricity
+    <set >
+      <if test="buyUserId != null" >
+        buyUserId = #{buyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="sellUserId != null" >
+        sellUserId = #{sellUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="electricity != null and electricity != ''" >
+        electricity = #{electricity},
+      </if>
+      <if test="buyTime != null and buyTime != ''" >
+        buyTime = #{buyTime},
+      </if>
+      <if test="state != null and state != '' " >
+        state = #{state},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>  	

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.ServerDataMapper" >
+	<resultMap id="BaseResultMap" type="com.dh.guangfu.po.ServerData" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+		<result column="hash" property="hash" />
+		<result column="address" property="address" />
+	</resultMap>
+	
+  <sql id="Base_Column_List" >
+  	id,value,hash,address
+  </sql>
+  
+  
+  <insert id="insert" parameterType="com.dh.guangfu.po.ServerData" >
+    insert into server_data (id, value, hash,address)
+    values (#{id,jdbcType=BIGINT}, #{value,jdbcType=VARCHAR}, #{hash,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR})
+  </insert>
+</mapper>  	

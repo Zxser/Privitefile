@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.PriceTypeMapper" >
+	<resultMap id="BaseResultMap" type="com.dh.guangfu.po.PriceType" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	
+  <sql id="Base_Column_List" >
+  	id,code,name
+  </sql>
+  
+  <select id="findAll" resultMap="BaseResultMap" parameterType="com.dh.guangfu.vo.PriceQuery" >
+    select 
+    <include refid="Base_Column_List" />
+    from conf_price_type
+       <where>
+	    	<if test="name!=null and name.trim()!=''"> and name like CONCAT("%",#{name},"%") </if>
+    	</where>
+  </select>
+  <!-- 得到记录总数 -->  
+    <select id="count" resultType="java.lang.Integer" parameterType="com.dh.guangfu.vo.PriceQuery">  
+       <![CDATA[ 
+          select count(*) from conf_price_type 
+       ]]>  
+         <where>
+	    	<if test="name!=null and name.trim()!=''"> and name like CONCAT("%",#{name},"%") </if>
+    	</where>
+    </select>
+   <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from conf_price_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from conf_price_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.dh.guangfu.po.PriceType" >
+    insert into conf_price_type (id, code,name)
+    values (#{id,jdbcType=BIGINT}, #{code},#{name})
+  </insert>
+  
+  <update id="update" parameterType="com.dh.guangfu.po.PriceType" >
+    update conf_price_type
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>  	

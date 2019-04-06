@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.CmsInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.dh.guangfu.po.CmsInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="cmsTypeId" property="cmstypeid" jdbcType="BIGINT" />
+    <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.dh.guangfu.po.CmsInfo" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+   <resultMap id="CmsInfoQuery" type="com.dh.guangfu.vo.CmsInfoQuery" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="cmsTypeId" property="cmstypeid" jdbcType="BIGINT" />
+    <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="INTEGER" />
+     <result column="content" property="content"  jdbcType="LONGVARCHAR"/>
+  </resultMap>
+  
+  <sql id="Base_Column_base" >
+    id, title, cmsTypeId, createDate, sort, status,content
+  </sql>
+  <sql id="Base_Column_List" >
+    id, title, cmsTypeId, createDate, sort, status,content
+  </sql>
+
+  <select id="selectById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+  <include refid="Base_Column_List" />
+    from cms_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="findByCmsTypeId" resultMap="BaseResultMap" parameterType="com.dh.guangfu.po.CmsInfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from cms_info
+       where cmsTypeId = #{cmstypeid,jdbcType=BIGINT}
+    order by sort desc
+  </select>
+  
+  <select id="findAll" resultMap="CmsInfoQuery" parameterType="com.dh.guangfu.vo.CmsInfoQuery" >
+    select 
+   c_ty.name,c_info.*
+    from cms_info c_info left join cms_type c_ty on c_ty.id=c_info.cmsTypeId
+   <where>
+	 	<if test="cmstypeid != null" >
+       and  c_info.cmsTypeId = #{cmstypeid,jdbcType=BIGINT}
+      </if>
+		<if test="title!=null">and  c_info.title like CONCAT("%",#{title},"%") </if>
+		<if test="name!=null">and  c_ty.name like CONCAT("%",#{name},"%") </if>
+		 <if test="status != null" >
+      and   c_info.status = #{status,jdbcType=INTEGER}
+      	</if>
+   </where>
+  </select>
+  
+    <select id="count" resultType="java.lang.Integer" parameterType="com.dh.guangfu.vo.CmsInfoQuery" >
+     <![CDATA[select count(*) from cms_info c_info left join cms_type c_ty on c_ty.id=c_info.cmsTypeId]]>    
+	   <where>
+		<if test="cmstypeid != null" >
+       and  c_info.cmsTypeId = #{cmstypeid,jdbcType=BIGINT}
+      </if>
+		<if test="title!=null">and  c_info.title like CONCAT("%",#{title},"%") </if>
+		<if test="name!=null">and  c_ty.name like CONCAT("%",#{name},"%") </if>
+		 <if test="status != null" >
+    	  and   c_info.status = #{status,jdbcType=INTEGER}
+      	</if>
+	   </where>
+  </select>
+  
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from cms_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from cms_info
+    where id in 
+    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+		 #{item}  
+	</foreach> 
+  </delete>
+  
+  <delete id="deleteByCmsTypeId" parameterType="java.lang.Long" >
+    delete from cms_info
+    where cmsTypeId in 
+    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+		 #{item}  
+	</foreach> 
+  </delete>
+  
+  <insert id="insert" parameterType="com.dh.guangfu.po.CmsInfo" >
+    insert into cms_info (id, title, cmsTypeId, 
+      createDate, sort, status, 
+      content)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{cmstypeid,jdbcType=BIGINT}, 
+      #{createdate,jdbcType=TIMESTAMP}, #{sort,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateById" parameterType="com.dh.guangfu.po.CmsInfo" >
+    update cms_info
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="cmstypeid != null" >
+        cmsTypeId = #{cmstypeid,jdbcType=BIGINT},
+      </if>
+      <if test="createdate != null" >
+        createDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+
+  
+</mapper>

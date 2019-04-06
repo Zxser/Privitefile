@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.system.po.SysOrganizationMapper" >
+	<resultMap id="BaseResultMap" type="com.dh.system.po.SysOrganization" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="abbreviation" property="abbreviation" jdbcType="VARCHAR" />
+		<result column="create_date" property="create_date"  />
+		<result column="start_date" property="start_date"  />
+		<result column="end_date" property="end_date"  />
+		<result column="pid" property="pid"  />
+	</resultMap>
+  <sql id="Base_Column_List" >
+  	id,code,name,abbreviation,create_date,start_date,end_date,pid
+  </sql>
+  
+  <select id="findPage" resultMap="BaseResultMap" parameterType="com.dh.guangfu.vo.PriceQuery" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_organization
+    <where>
+	    	<if test="code!=null and code.trim()!=''"> and code like CONCAT("%",#{code},"%") </if>
+	    	<if test="name!=null and name.trim()!=''"> and name like CONCAT("%",#{name},"%") </if>
+    </where>
+  </select>
+  <!-- 得到记录总数 -->  
+    <select id="count" resultType="java.lang.Integer" parameterType="com.dh.guangfu.vo.PriceQuery">  
+       <![CDATA[ 
+          select count(*) from sys_organization 
+       ]]>  
+     <where>
+	    	<if test="code!=null and code.trim()!=''"> and code like CONCAT("%",#{code},"%") </if>
+	    	<if test="name!=null and name.trim()!=''"> and name like CONCAT("%",#{name},"%") </if>
+    </where>
+    </select>
+    
+  <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_organization
+  </select>
+  
+   <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_organization
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+   <select id="children" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_organization
+    where pid = #{id,jdbcType=BIGINT}
+  </select>
+  
+   <select id="top" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_organization
+    where pid is null
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from sys_organization
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.dh.system.po.SysOrganization" >
+    insert into sys_organization (id,code,name,abbreviation,create_date,start_date,end_date,pid)
+    values (#{id,jdbcType=BIGINT},#{code},#{name},#{abbreviation},#{create_date},#{start_date},#{end_date},#{pid})
+  </insert>
+  
+  <update id="update" parameterType="com.dh.system.po.SysOrganization" >
+    update sys_organization
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="abbreviation != null" >
+        abbreviation = #{abbreviation,jdbcType=VARCHAR},
+      </if>
+      <if test="create_date != null" >
+        create_date = #{create_date,jdbcType=VARCHAR},
+      </if>
+      <if test="start_date != null" >
+        start_date = #{start_date,jdbcType=VARCHAR},
+      </if>
+      <if test="end_date != null" >
+        end_date = #{end_date,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>  	

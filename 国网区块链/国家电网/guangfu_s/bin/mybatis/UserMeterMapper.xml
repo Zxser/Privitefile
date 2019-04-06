@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.UserMeterMapper" >
+  <resultMap id="BaseResultMap" type="com.dh.guangfu.po.UserMeter" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="meter_ID" property="meter_ID"  />
+    <result column="name" property="name"  />
+    <result column="card_id" property="card_id" />
+    <result column="phone" property="phone" />
+    <result column="remark" property="remark" />
+    <result column="user_id" property="user_id" />
+    <result column="status" property="status" />
+    <result column="address" property="address" />
+  </resultMap>
+ 
+  
+  <sql id="Base_Column_List" >
+    id, meter_ID, name, card_id,phone,remark, user_id,status,address
+  </sql>
+  
+  <select id="fingByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_meter 
+    where user_id = #{user_id,jdbcType=BIGINT} 
+  </select>
+  
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_meter 
+    where id = #{id,jdbcType=BIGINT} 
+  </select>
+  
+  <select id="fingByPage" resultMap="BaseResultMap" parameterType="com.dh.guangfu.vo.UserMeterQuery" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_meter 
+    <where>
+    	 <if test="status != null" >
+       	 status = #{status}
+     	 </if>
+    </where>
+  </select>
+  <select id="count" resultType="java.lang.Integer" parameterType="com.dh.guangfu.vo.UserMeterQuery">  
+      <![CDATA[ 
+         select count(*) from user_meter 
+      ]]>  
+        <where>
+    	 <if test="status != null" >
+       	 status = #{status}
+     	 </if>
+    </where>
+   </select>
+  
+    <delete id="deleteById" parameterType="java.lang.String" >
+	    delete from user_meter
+	    where id in 
+	    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+			 #{item}  
+		</foreach>  
+	  </delete>
+ 
+  <insert id="insert" parameterType="com.dh.guangfu.po.UserMeter"  useGeneratedKeys="true" keyProperty="id">
+    insert into user_meter ( id, meter_ID, name, card_id,phone,remark, user_id,status,address)
+    values (#{id,jdbcType=BIGINT}, 
+      #{meter_ID,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{card_id,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},#{user_id},0,#{address})
+  </insert>
+  <update id="updateAgree"  parameterType="com.dh.guangfu.vo.UserMeterQuery">
+  	 update user_meter
+  	  <set > status = #{status},
+  	  	 <if test="remark != null" >
+       	 remark = #{remark,jdbcType=VARCHAR},
+      	</if>
+  	  </set>
+  	  where id in
+  		 <foreach item="item" index="index" collection="arrayId" open="(" separator="," close=")">  
+			 #{item}  
+		</foreach>  
+  </update>
+  <!--动态更新 -->
+  <update id="update" parameterType="com.dh.guangfu.po.UserMeter" >
+    update user_meter
+    <set >
+      <if test="user_id != null" >
+        user_id = #{user_id},
+      </if>
+      <if test="meter_ID != null" >
+        meter_ID = #{meter_ID,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="card_id != null" >
+        card_id = #{card_id,jdbcType=VARCHAR},
+      </if>
+       <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+       <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+       <if test="user_id != null" >
+        user_id = #{user_id},
+      </if>
+       <if test="address != null" >
+        address = #{address},
+      </if>
+       <if test="status != null" >
+        status = #{status},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

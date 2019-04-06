@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.guangfu.po.UserTotalMapper" >
+  <resultMap id="BaseResultMap" type="com.dh.guangfu.po.UserTotal" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="user_id" />
+    <result column="total_integral" property="total_integral"  />
+    <result column="total_electricity" property="total_electricity"  />
+    <result column="total_traffic" property="total_traffic" />
+    <result column="allow_integral" property="allow_integral" />
+    <result column="ban_integral" property="ban_integral" />
+  </resultMap>
+ 
+  
+  <sql id="Base_Column_List" >
+    id, user_id, total_integral, total_electricity, total_traffic,allow_integral,ban_integral
+  </sql>
+  
+  <select id="fingByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_total 
+    where user_id = #{user_id,jdbcType=BIGINT} 
+  </select>
+  
+  
+    <delete id="deleteById" parameterType="java.lang.String" >
+	    delete from user_total
+	    where id in 
+	    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+			 #{item}  
+		</foreach>  
+	  </delete>
+ 
+  <insert id="insert" parameterType="com.dh.guangfu.po.UserTotal"  useGeneratedKeys="true" keyProperty="id">
+    insert into user_total (id,
+      user_id, total_integral, total_electricity, total_traffic,allow_integral,ban_integral)
+    values (#{id,jdbcType=BIGINT}, 
+      #{user_id,jdbcType=VARCHAR}, #{total_integral,jdbcType=VARCHAR}, #{total_electricity,jdbcType=VARCHAR}, #{total_traffic,jdbcType=VARCHAR},#{allow_integral},#{ban_integral})
+  </insert>
+  <!--动态更新 -->
+  <update id="update" parameterType="com.dh.guangfu.po.UserTotal" >
+    update user_total
+    <set >
+      <if test="user_id != null" >
+        user_id = #{user_id},
+      </if>
+      <if test="total_integral != null" >
+        total_integral = #{total_integral,jdbcType=VARCHAR},
+      </if>
+      <if test="total_electricity != null" >
+        total_electricity = #{total_electricity,jdbcType=VARCHAR},
+      </if>
+      <if test="total_traffic != null" >
+        total_traffic = #{total_traffic,jdbcType=VARCHAR},
+      </if>
+      <if test="allow_integral != null" >
+        allow_integral = #{allow_integral},
+      </if>
+      <if test="ban_integral != null" >
+        ban_integral = #{ban_integral},
+      </if>
+    </set>
+    where user_id = #{user_id,jdbcType=BIGINT}
+  </update>
+</mapper>

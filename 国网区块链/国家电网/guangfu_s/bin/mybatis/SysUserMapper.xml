@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dh.backview.po.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.dh.backview.po.SysUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="coin_address" property="coin_address" />
+    <result column="privatekey" property="privatekey" />
+    <result column="head" property="head" />
+    <result column="type" property="type" />
+  </resultMap>
+  
+  <resultMap id="BaseResultInfoMap" type="com.dh.system.vo.SysUserQuery" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="card_id" property="card_id" />
+    <result column="coin_address" property="coin_address" />
+     <result column="privatekey" property="privatekey" />
+     <result column="nickname" property="nickname" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, create_time, password, card_id,phone, status, username,privatekey,head,nickname
+  </sql>
+  
+  <select id="findByUserInfoId" resultMap="BaseResultInfoMap" parameterType="java.lang.Long" >
+    select * from sys_user u 
+    where u.id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user 
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="findUserByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where username = #{username,jdbcType=BIGINT}
+  </select>
+  <select id="getUserByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where phone = #{phone,jdbcType=BIGINT}
+  </select>
+  
+  <!-- selectAll -->
+  <select id="selectAll" resultMap="BaseResultInfoMap" parameterType="com.dh.system.vo.SysUserQuery" >
+   select 
+    *
+    from sys_user u
+    <where>
+		<if test="username!=null and username.trim() != ''"> and u.username like CONCAT("%",#{username},"%") </if>
+    </where>
+  </select>
+  <!-- 得到记录总数 -->  
+    <select id="count" resultType="java.lang.Integer" parameterType="com.dh.system.vo.SysUserQuery">  
+       <![CDATA[ 
+         select 
+   	 	count(*)
+   		 from sys_user u 
+       ]]>  
+        <where>
+			<if test="username!=null and username.trim() != ''"> and u.username like CONCAT("%",#{username},"%") </if>
+  		</where>
+    </select>
+  
+    <delete id="deleteById" parameterType="java.lang.String" >
+	    delete from sys_user
+	    where id in 
+	    <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+			 #{item}  
+		</foreach>  
+	  </delete>
+ 
+  <insert id="insert" parameterType="com.dh.backview.po.SysUser"  useGeneratedKeys="true" keyProperty="id">
+    insert into sys_user (id,card_id,type, create_time,
+      password, phone, status, username,coin_address,privatekey)
+    values (#{id,jdbcType=BIGINT},#{card_id},#{type}, #{createTime,jdbcType=TIMESTAMP},
+      #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},  #{status,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR} 
+   	  ,#{coin_address},#{privatekey}
+    )
+  </insert>
+  <!--动态更新 -->
+  <update id="update" parameterType="com.dh.backview.po.SysUser" >
+    update sys_user
+    <set >
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="privatekey != null" >
+        privatekey = #{privatekey,jdbcType=VARCHAR},
+      </if>
+      <if test="head != null" >
+        head = #{head,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="card_id != null" >
+        card_id = #{card_id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+</mapper>
